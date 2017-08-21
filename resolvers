@@ -1,25 +1,21 @@
-var TODOs = [{
-    "id": 1446739542,
-    "title": "Read emails",
-    "completed": false
-}, {
-    "id": 1412740883,
-    "title": "Buy orange",
-    "completed": true
-}];
-
 var root = {
-  todos: () => {return TODOs},
-  add: ({title}) => {
-    var newTodo = {
+  todos: async (data, {mongo: {TODOs}}) => {
+    console.log('Querying todos')
+    return (TODOs.find().toArray())
+  },
+  add: async ({title}, {mongo: {TODOs}}) => {
+    const newTodo = {
       id: (new Date()).getTime(),
       title: title,
       completed: false
-      }
-    TODOs.push(newTodo);
-    return TODOs;
-  }
+    }
+    console.log('Inserting')
+    const response = await TODOs.insert(newTodo)
+    console.log("instered? " + JSON.stringify( Object.assign({id: response.insertedIds[0]}, newTodo), null, 4));
+    console.log("type? " + typeof Object.assign({id: response.insertedIds[0]}, newTodo))
+    return TODOs.find(Object.assign({id: response.insertedIds[0]}, newTodo)).toArray()
+  },
+  TODOs: {id: root => root._id | root.id}
 }
 
-
-module.exports =  root
+module.exports = root
