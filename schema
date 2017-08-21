@@ -1,0 +1,27 @@
+const {graphql, buildSchema} = require('graphql')
+
+
+
+var schema = `
+  type TodoType {
+    id: ID
+    title: String
+    completed: Boolean
+  }
+
+  type Query {
+    todos: [TodoType]
+  }
+
+  type Mutation {
+    add(title: String!): [TodoType]
+  }
+
+  schema {
+    query: Query,
+    mutation: Mutation
+  }
+`
+
+
+module.exports = schema

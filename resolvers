@@ -1,0 +1,25 @@
+var TODOs = [{
+    "id": 1446739542,
+    "title": "Read emails",
+    "completed": false
+}, {
+    "id": 1412740883,
+    "title": "Buy orange",
+    "completed": true
+}];
+
+var root = {
+  todos: () => {return TODOs},
+  add: ({title}) => {
+    var newTodo = {
+      id: (new Date()).getTime(),
+      title: title,
+      completed: false
+      }
+    TODOs.push(newTodo);
+    return TODOs;
+  }
+}
+
+
+module.exports =  root
