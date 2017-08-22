@@ -12,6 +12,7 @@ var schema = `
   type Mutation {
     add(title: String!): [TodoType]
     delete(id: ID, title: String, justOne: Boolean): [TodoType]
+    update(id: ID, title: String, newTitle: String!): TodoType
   }
 
   schema {

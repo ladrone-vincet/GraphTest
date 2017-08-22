@@ -30,6 +30,14 @@ var root = {
     }
     return removed
   },
+  update: async ({id, title, newTitle}, {mongo: {TODOs}}) => {
+    if (!newTitle) return null
+    const query = {$or: [{'title': title}, {'id': id}]}
+    const updated = await TODOs.findOne({'title': title})
+    updated.title = newTitle
+    await TODOs.update(query, updated)
+    return updated
+  },
   TODOs: {id: root => root._id | root.id}
 }
 
