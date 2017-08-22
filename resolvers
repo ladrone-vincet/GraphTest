@@ -9,11 +9,26 @@ var root = {
       title: title,
       completed: false
     }
-    console.log('Inserting')
     const response = await TODOs.insert(newTodo)
-    console.log("instered? " + JSON.stringify( Object.assign({id: response.insertedIds[0]}, newTodo), null, 4));
-    console.log("type? " + typeof Object.assign({id: response.insertedIds[0]}, newTodo))
     return TODOs.find(Object.assign({id: response.insertedIds[0]}, newTodo)).toArray()
+  },
+  delete: async ({id, title, justOne}, {mongo: {TODOs}}) => {
+    const query = {$or: [{'title': title}, {'id': id}]}
+    let removed = []
+    if (justOne) {
+      let one = await TODOs.findOne(query)
+      if (one) {
+        // TODOs.deleteOne(?)
+        await TODOs.remove({'_id': one._id})
+        removed.push(one)
+      }
+    } else {
+      await TODOs.find(query).forEach((item) => {
+        removed.push(item)
+      })
+      await TODOs.remove(query)
+    }
+    return removed
   },
   TODOs: {id: root => root._id | root.id}
 }

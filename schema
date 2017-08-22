@@ -1,7 +1,3 @@
-const {graphql, buildSchema} = require('graphql')
-
-
-
 var schema = `
   type TodoType {
     id: ID
@@ -15,6 +11,7 @@ var schema = `
 
   type Mutation {
     add(title: String!): [TodoType]
+    delete(id: ID, title: String, justOne: Boolean): [TodoType]
   }
 
   schema {
@@ -22,6 +19,4 @@ var schema = `
     mutation: Mutation
   }
 `
-
-
 module.exports = schema
