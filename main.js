@@ -2,10 +2,11 @@
 const buildSchema = require('graphql').buildSchema
 const express = require('express')
 const graphQLHTTP = require('express-graphql')
+const cors = require('cors')
 
-const connectMongo = require('./db-connector.js')
-const Schema = buildSchema(require('./schema'))
-const Root = require('./resolvers')
+const connectMongo = require('./db/db-connector.js')
+const Schema = buildSchema(require('./db/schema'))
+const Root = require('./db/resolvers')
 
 // const Root = require('./resolvers')
 // const Schema = require('./schema.js')
@@ -17,13 +18,14 @@ const start = async () => {
   // await mongo.insert(ExTodos)
   const app = express()
     // .use('/', graphQLHTTP({schema: Schema, graphiql: true, pretty: true} ))
-    .use('/', graphQLHTTP({
+    .use('*', cors({origin: 'http://localhost:8080'}))
+    .use('/graphql', graphQLHTTP({
       schema: Schema,
       rootValue: Root,
       context: {mongo},
       graphiql: true,
       pretty: true}))
-    .listen(8080, function (err) { err ? console.warn(err) : console.log('GraphQL is now running on localhost:8080') })
+    .listen(8000, function (err) { err ? console.warn(err) : console.log('GraphQL is now running on localhost:8080') })
   console.log('Started')
 }
 
