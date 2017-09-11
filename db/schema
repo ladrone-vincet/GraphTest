@@ -13,6 +13,7 @@ var schema = `
     add(title: String!): [TodoType]
     delete(id: ID, title: String, justOne: Boolean): [TodoType]
     update(id: ID, title: String, newTitle: String!): TodoType
+    setCompleted(id: ID, title: String): TodoType
   }
 
   schema {

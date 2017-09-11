@@ -1,7 +1,7 @@
 var root = {
   todos: async (data, {mongo: {TODOs}}) => {
     console.log('Querying todos')
-    return (TODOs.find().toArray())
+    return TODOs.find().toArray()
   },
   add: async ({title}, {mongo: {TODOs}}) => {
     const newTodo = {
@@ -30,6 +30,7 @@ var root = {
     }
     return removed
   },
+  // TODO optimize, use findOneAndUpdate
   update: async ({id, title, newTitle}, {mongo: {TODOs}}) => {
     if (!newTitle) return null
     const query = {$or: [{'title': title}, {'id': id}]}
@@ -37,6 +38,12 @@ var root = {
     updated.title = newTitle
     await TODOs.update(query, updated)
     return updated
+  },
+  setCompleted: async ({id, title}, {mongo: {TODOs}}) => {
+    const query = {$or: [{'title': title}, {'id': id}]}
+    const oldTodo = await TODOs.findOne(query)
+    const returned = await TODOs.findOneAndUpdate(query, {$set: {completed: !oldTodo.completed}}, {returnOriginal: false})
+    return returned.value
   },
   TODOs: {id: root => root._id | root.id}
 }
